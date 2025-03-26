@@ -54,6 +54,7 @@ const profileFormElement = profilePopup.querySelector('.popup__form');
 const nameInput = profilePopup.querySelector('.popup__input_type_name');
 const jobInput = profilePopup.querySelector('.popup__input_type_description');
 
+const popups = [profilePopup, imagePopup, cardPopup]
 
 // Функция открытия popup
 function openModal(popup) {
@@ -191,4 +192,8 @@ function deleteCard(button) {
 for (let i = 0; i < initialCards.length; i++) {
     let element = createCard(initialCards[i].name, initialCards[i].link, initialCards[i].name)
     placesList.append(element)
+}
+
+for (let i=0; i<popups.length; i++) {
+    popups[i].classList.add('popup_is-animated')
 }
