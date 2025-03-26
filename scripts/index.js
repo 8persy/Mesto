@@ -1,27 +1,27 @@
 const initialCards = [
     {
-      name: "Архыз",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
+        name: "Архыз",
+        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg",
     },
     {
-      name: "Челябинская область",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
+        name: "Челябинская область",
+        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg",
     },
     {
-      name: "Иваново",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
+        name: "Иваново",
+        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg",
     },
     {
-      name: "Камчатка",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
+        name: "Камчатка",
+        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg",
     },
     {
-      name: "Холмогорский район",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
+        name: "Холмогорский район",
+        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg",
     },
     {
-      name: "Байкал",
-      link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
+        name: "Байкал",
+        link: "https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg",
     }
 ];
 
@@ -114,7 +114,7 @@ cardAddButton.addEventListener('click', function () {
 });
 
 cardCloseButton.addEventListener('click', function () {
-   closeModal(cardPopup);
+    closeModal(cardPopup);
 });
 
 
@@ -149,7 +149,27 @@ function createCard(title, link, alt_info) {
     let deleteButton = cardElement.querySelector('.card__delete-button');
     deleteButton.addEventListener('click', function () {
         deleteCard(deleteButton)
-    })
+    });
+
+    let img = cardElement.querySelector('.card__image');
+    img.addEventListener('click', function () {
+        let card = img.closest('.card')
+
+        let popupImg = imagePopup.querySelector('.popup__image');
+        let popupCaption = imagePopup.querySelector('.popup__caption');
+        let caption = card.querySelector('.card__title').textContent;
+
+        popupImg.src = img.src;
+        popupImg.alt = img.alt;
+        popupCaption.textContent = caption;
+
+        let closeImgPopup = imagePopup.querySelector('.popup__close');
+        closeImgPopup.addEventListener('click', function () {
+            closeModal(imagePopup)
+        });
+
+        openModal(imagePopup)
+    });
 
     return cardElement
 }
@@ -168,7 +188,7 @@ function deleteCard(button) {
 
 
 // Вывести карточки на страницу
-for (let i=0; i<initialCards.length; i++) {
+for (let i = 0; i < initialCards.length; i++) {
     let element = createCard(initialCards[i].name, initialCards[i].link, initialCards[i].name)
     placesList.append(element)
 }
