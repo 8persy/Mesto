@@ -146,6 +146,11 @@ function createCard(title, link, alt_info) {
         toggleLike(like)
     });
 
+    let deleteButton = cardElement.querySelector('.card__delete-button');
+    deleteButton.addEventListener('click', function () {
+        deleteCard(deleteButton)
+    })
+
     return cardElement
 }
 
@@ -155,7 +160,11 @@ function toggleLike(like) {
 }
 
 
-// @todo: Функция удаления карточки
+// Функция удаления карточки
+function deleteCard(button) {
+    let card = button.closest('.card');
+    card.remove()
+}
 
 
 // Вывести карточки на страницу
