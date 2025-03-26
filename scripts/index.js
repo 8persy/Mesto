@@ -31,6 +31,14 @@ const cardTemplate = document.querySelector('#card-template').content;
 // consts for cards
 const placesList = document.querySelector('.places__list');
 const cardPopup = document.querySelector('.popup_type_new-card');
+const cardAddButton = document.querySelector('.profile__add-button');
+const cardCloseButton = cardPopup.querySelector('.popup__close');
+
+const cardFormElement = cardPopup.querySelector('.popup__form');
+
+const titleInput = cardPopup.querySelector('.popup__input_type_card-name');
+const urlInput = cardPopup.querySelector('.popup__input_type_url');
+
 
 // consts for image
 const imagePopup = document.querySelector('.popup_type_image');
@@ -94,6 +102,36 @@ function handleProfileFormSubmit(evt) {
 
 // listener for submit button of profile button
 profileFormElement.addEventListener('submit', handleProfileFormSubmit);
+
+
+cardAddButton.addEventListener('click', function () {
+    let cardNameInput = cardPopup.querySelector('.popup__input_type_card-name');
+    let cardUrlInput = cardPopup.querySelector('.popup__input_type_url');
+    cardNameInput.value = '';
+    cardUrlInput.value = '';
+
+    openModal(cardPopup);
+});
+
+cardCloseButton.addEventListener('click', function () {
+   closeModal(cardPopup);
+});
+
+
+function handleCardFormSubmit(evt) {
+    evt.preventDefault();
+
+    let title = titleInput.value;
+    let url = urlInput.value;
+
+    let card = createCard(title, url, title)
+    placesList.prepend(card)
+
+    closeModal(cardPopup)
+}
+
+
+cardFormElement.addEventListener('submit', handleCardFormSubmit);
 
 
 // function for card create
