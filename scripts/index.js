@@ -141,7 +141,17 @@ function createCard(title, link, alt_info) {
     cardElement.querySelector('.card__image').src = link;
     cardElement.querySelector('.card__image').alt = alt_info;
 
+    let like = cardElement.querySelector('.card__like-button');
+    like.addEventListener('click', function () {
+        toggleLike(like)
+    });
+
     return cardElement
+}
+
+
+function toggleLike(like) {
+    like.classList.toggle('card__like-button_is-active');
 }
 
 
