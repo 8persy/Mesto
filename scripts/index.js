@@ -56,16 +56,85 @@ const jobInput = profilePopup.querySelector('.popup__input_type_description');
 
 const popups = [profilePopup, imagePopup, cardPopup]
 
-// Функция открытия popup
+
+// Добавляем в начало кода (после объявления popups)
+function closeByEsc(evt) {
+    if (evt.key === 'Escape') {
+        const openedPopup = document.querySelector('.popup_is-opened');
+        if (openedPopup) {
+            closeModal(openedPopup);
+        }
+    }
+}
+
+// Модифицируем функции openModal и closeModal
 function openModal(popup) {
     popup.classList.add('popup_is-opened');
+    document.addEventListener('keydown', closeByEsc); // Добавляем слушатель при открытии
 }
 
-
-// Функция закрытия popup
 function closeModal(popup) {
     popup.classList.remove('popup_is-opened');
+    document.removeEventListener('keydown', closeByEsc); // Удаляем слушатель при закрытии
 }
+
+
+const showInputError = (formElement, inputElement, errorMessage) => {
+    const errorElement = formElement.querySelector(`.popup__input-error_type_${inputElement.id}`);
+    inputElement.classList.add('popup__input_type_error');
+    errorElement.textContent = errorMessage;
+    errorElement.classList.add('popup__input-error_action_active');
+};
+
+
+const hideInputError = (formElement, inputElement) => {
+    const errorElement = formElement.querySelector(`.popup__input-error_type_${inputElement.id}`);
+    inputElement.classList.remove('popup__input_type_error');
+    errorElement.classList.remove('popup__input-error_action_active');
+    errorElement.textContent = '';
+};
+
+
+const checkInputValidity = (formElement, inputElement) => {
+    if (!inputElement.validity.valid) {
+        showInputError(formElement, inputElement, inputElement.validationMessage);
+    } else {
+        hideInputError(formElement, inputElement);
+    }
+};
+
+
+const setEventListeners = (formElement) => {
+    const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+    const buttonElement = formElement.querySelector('.popup__button');
+    toggleButtonState(inputList, buttonElement)
+
+    inputList.forEach((inputElement) => {
+        inputElement.addEventListener('input', function () {
+            checkInputValidity(formElement, inputElement);
+            toggleButtonState(inputList, buttonElement)
+        });
+    });
+};
+
+
+const toggleButtonState = (inputList, buttonElement) => {
+    if (hasInvalidInput(inputList)) {
+        buttonElement.classList.add('button_inactive')
+    } else {
+        buttonElement.classList.remove('button_inactive')
+    }
+};
+
+
+const hasInvalidInput = (inputList) => {
+    return inputList.some(function (elem) {
+        return !elem.validity.valid
+    })
+};
+
+setEventListeners(profileFormElement);
+setEventListeners(cardFormElement);
 
 
 // лисенер на кнопку редактирования профиля
@@ -198,6 +267,19 @@ for (let i = 0; i < initialCards.length; i++) {
     placesList.append(element)
 }
 
-for (let i=0; i<popups.length; i++) {
+for (let i = 0; i < popups.length; i++) {
     popups[i].classList.add('popup_is-animated')
 }
+
+
+// Функция закрытия попапа по клику на оверлей
+function handleOverlayClick(evt) {
+    if (evt.target === evt.currentTarget) {
+        closeModal(evt.currentTarget);
+    }
+}
+
+// Добавляем обработчики клика на оверлей для всех попапов
+popups.forEach(popup => {
+    popup.addEventListener('click', handleOverlayClick);
+});
