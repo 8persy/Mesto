@@ -2,7 +2,8 @@ const config = {
     baseUrl: 'https://mesto.nomoreparties.co/v1/apf-cohort-202',
     headers: {
         authorization: 'b56301e0-9dd5-4e13-bfdf-af43c26818b0',
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
     }
 };
 
@@ -43,12 +44,14 @@ export const addNewCard = (name, link) => {
     return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
         headers: config.headers,
-        body: JSON.stringify({
-            name,
-            link
-        })
+        body: JSON.stringify({name, link})
     })
-        .then(checkResponse);
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+            return res.json();
+        });
 };
 
 export const deleteCard = (cardId) => {
@@ -56,23 +59,32 @@ export const deleteCard = (cardId) => {
         method: 'DELETE',
         headers: config.headers
     })
-        .then(checkResponse);
+        .then(res => {
+            if (res.status === 403) {
+                return res.json().then(data => {
+                    throw new Error(data.message || 'Нет прав на удаление');
+                });
+            }
+            if (!res.ok) {
+                throw new Error(`Ошибка ${res.status}`);
+            }
+            return res.json(); // <- вот это
+        });
 };
 
+
 export const likeCard = (cardId) => {
-    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    return fetch(`${config.baseUrl}/cards/${cardId}/likes`, {
         method: 'PUT',
         headers: config.headers
-    })
-        .then(checkResponse);
+    }).then(checkResponse);
 };
 
 export const unlikeCard = (cardId) => {
-    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+    return fetch(`${config.baseUrl}/cards/${cardId}/likes`, {
         method: 'DELETE',
         headers: config.headers
-    })
-        .then(checkResponse);
+    }).then(checkResponse);
 };
 
 export const updateAvatar = (avatarUrl) => {

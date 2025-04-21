@@ -40,16 +40,16 @@ const setEventListeners = (formElement, settings) => {
     const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector));
     const buttonElement = formElement.querySelector(settings.submitButtonSelector);
 
-    // Инициализация состояния кнопки
     toggleButtonState(inputList, buttonElement, settings.inactiveButtonClass);
 
-    // Обновление состояния кнопки при изменении полей
     inputList.forEach(input => {
         input.addEventListener('input', () => {
-            toggleButtonState(inputList, buttonElement, settings.inactiveButtonClass);
+            checkInputValidity(formElement, input, settings); // показываем/прячем ошибку
+            toggleButtonState(inputList, buttonElement, settings.inactiveButtonClass); // обновляем кнопку
         });
     });
 };
+
 
 export const enableValidation = (settings) => {
     const forms = Array.from(document.querySelectorAll(settings.formSelector));
